@@ -119,8 +119,8 @@ trait JodaResources
         if (!isset($this->name)) {
             $this->name = $name;
             $this->pluralName = Str::plural($this->name);
-            $this->pluralKebabName = $this->fromPascalCaseToKebabCase(Str::plural($this->name));
-            $this->pluralSnakeName = $this->fromPascalCaseToSnakeCase(Str::plural($this->name));
+            $this->pluralKebabName = Str::kebab($this->pluralName);
+            $this->pluralSnakeName = Str::snake($this->pluralName);
         }
 
         $reflector = new ReflectionClass($this);
@@ -201,23 +201,5 @@ trait JodaResources
 
     public function afterDestroy()
     {
-    }
-
-    public function fromPascalCaseToKebabCase($input)
-    {
-        return implode('-', $this->takePascalApart($input));
-    }
-    public function fromPascalCaseToSnakeCase($input)
-    {
-        return implode('_', $this->takePascalApart($input));
-    }
-    public function takePascalApart($input)
-    {
-        preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
-        $ret = $matches[0];
-        foreach ($ret as &$match) {
-            $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
-        }
-        return $ret;
     }
 }
